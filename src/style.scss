@@ -318,7 +318,8 @@ body {
         calc(var(--rocket-end-y) + 10px),
         0px
       )
-      rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+      rotateX(var(--rotate-x)) rotateY(var(--rotate-y))
+      rotateZ(calc(var(--rotate-z) + 14 * 180deg));
   }
 
   84% {
@@ -327,7 +328,8 @@ body {
         calc(var(--rocket-end-y)),
         0px
       )
-      rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+      rotateX(var(--rotate-x)) rotateY(var(--rotate-y))
+      rotateZ(calc(var(--rotate-z) + 14 * 180deg));
   }
 
   95% {
@@ -337,7 +339,7 @@ body {
         0px
       )
       rotateX(var(--rotate-x)) rotateY(var(--rotate-y))
-      rotateZ(calc(var(--rotate-z)));
+      rotateZ(calc(var(--rotate-z) + 14 * 180deg));
   }
 
   100% {
