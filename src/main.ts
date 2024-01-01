@@ -21,13 +21,13 @@ interface Point {
   z: number;
 }
 const position: Point = {
-  x: (startElementRect?.x ?? 0) + 5,
-  y: -(windowHeight - (startElementRect?.y ?? 0) + 25),
+  x: (startElementRect?.x ?? 0) + 4,
+  y: -(windowHeight - (startElementRect?.y ?? 0) + 30),
   z: 0,
 };
 const finishPosition: Point = {
-  x: (finishElementRect?.x ?? 0) + 5,
-  y: -(windowHeight - (finishElementRect?.y ?? 0) + 25),
+  x: (finishElementRect?.x ?? 0) + 4,
+  y: -(windowHeight - (finishElementRect?.y ?? 0) + 30),
   z: 0,
 };
 
