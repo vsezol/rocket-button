@@ -4,19 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>Rocket button</title>
   </head>
   <body>
     <div class="container">
       <div class="sky"></div>
       <div class="ground">
-        <div></div>
         <button class="button button_pressed">
-          <div class="start">X</div>
-          <div class="text">
-            ROCKET LAUNCH<br />№<span class="launch-number"></span>
+          <div class="button__front">
+            <div class="launch-site launch-site_start">
+              <div class="launch-site__front">
+                <div class="launch-site__from"></div>
+              </div>
+            </div>
+            <div class="text">
+              ROCKET LAUNCH<br />№<span class="launch-number"></span>
+            </div>
+            <div class="launch-site launch-site_finish">
+              <div class="launch-site__front">
+                <div class="launch-site__target"></div>
+              </div>
+            </div>
           </div>
-          <div class="finish">X</div>
         </button>
       </div>
     </div>
@@ -129,6 +138,8 @@
         <div class="rocket__wings"></div>
       </div>
     </div>
+
+    <iframe class="container iframe" id="iframe" frameborder="0"></iframe>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

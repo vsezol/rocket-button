@@ -1,51 +1,23 @@
 @import url("https://fonts.googleapis.com/css?family=Rubik:700&display=swap");
 
-@mixin launch-site {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  aspect-ratio: 1;
-  border-radius: 100%;
-
-  background-color: var(--btn-bg);
-
-  border: 1px solid var(--btn-border);
-  border-radius: 0.75em;
-
-  transform-style: preserve-3d;
-  transition: transform 150ms linear, background-color 150ms linear;
-
-  transform: translate3d(0, 0, 1em);
-
-  &::before {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--btn-side-bg);
-    border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--btn-border), 0 0.15em 0 0 var(--btn-shadow);
-    transform: translate3d(0, 0.15em, -0.2em);
-    transition: transform 150ms linear, box-shadow 150ms linear;
-  }
+@function vh($percent) {
+  @return calc(var(--vh, 1vh) * #{$percent});
 }
 
-* {
-  box-sizing: border-box;
-  // transform-style: preserve-3d;
+.iframe {
+  z-index: 0;
+  pointer-events: none;
+  visibility: hidden;
+  border: none;
+
+  width: 100%;
+  height: auto;
+  min-height: 100%;
 }
 
 :root {
   // rocket
   --perspective: 1200;
-  // --rotate-x: -15;
-  // --rotate-y: -40;
   --body: #999;
   --wings: #666;
   --base: #bf4040;
@@ -59,16 +31,21 @@
   // button
   --ground-bg: #177908;
   --sky-bg: #6bc8cc;
-  --btn-bg: #96867f;
+  --btn-bg: #887c76;
   --btn-text: white;
   --btn-hover-bg: #887c76;
   --btn-border: #2d2524;
   --btn-side-bg: #5b524c;
   --btn-shadow: rgba(0, 0, 0, 0.2);
+
+  // site
+  --site-bg: #96867f;
+  --site-side-bg: #5b524c;
 }
 
 html {
   overflow: hidden;
+  height: -webkit-fill-available;
 }
 
 body {
@@ -76,6 +53,7 @@ body {
   padding: 0;
   height: 100vh;
   width: 100vw;
+  min-height: -webkit-fill-available;
   overflow: hidden;
   font-family: "Rubik", sans-serif;
   box-sizing: border-box;
@@ -103,15 +81,13 @@ body {
 }
 
 .button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   width: 300px;
   height: 100px;
   font-size: 20px;
   font-weight: 700;
+  display: flex;
+  padding: 0;
+  margin: 0;
 
   cursor: pointer;
   outline: none;
@@ -119,51 +95,56 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
 
-  color: var(--btn-text);
-  background-color: var(--btn-bg);
+  background-color: var(--btn-side-bg);
 
-  transform-style: preserve-3d;
-  transition: transform 150ms linear, background-color 150ms linear;
+  transition: transform 150ms linear, background-color 150ms linear,
+    box-shadow 150ms linear;
 
-  padding: 1.25em 2em;
-  border: 2px solid var(--btn-border);
-  border-radius: 0.75em;
+  // border: 2px solid var(--btn-border);
+  border: none;
+  border-radius: 12px;
+  box-sizing: border-box;
 
-  &::before {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--btn-side-bg);
-    border-radius: inherit;
-    box-shadow: 0 0 0 2px var(--btn-border), 0 0.625em 0 0 var(--btn-shadow);
-    transform: translate3d(0, 0.75em, -1em);
-    transition: transform 150ms linear, box-shadow 150ms linear;
-  }
+  box-shadow: 0 8px 0 0 var(--btn-shadow);
 
-  &:hover,
-  &:active {
-    background: var(--btn-hover-bg);
+  .button__front {
+    transform: translateY(-12px);
   }
 
   &_pressed {
-    transform: translate(0, 0.25em);
-    &::before {
-      box-shadow: 0 0 0 2px var(--btn-border), 0 0.5em 0 0 var(--btn-shadow);
-      transform: translate3d(0, 0.5em, -1em);
+    box-shadow: 0 5px 0 0 var(--btn-shadow);
+
+    .button__front {
+      transform: translateY(-6px);
     }
   }
 
   &_hammered {
-    transform: translate(0em, 0.75em);
-    &::before {
-      box-shadow: 0 0 0 2px var(--btn-border), 0 0 var(--btn-shadow);
-      transform: translate3d(0, 0, -1em);
+    box-shadow: 0 0 var(--btn-shadow);
+
+    .button__front {
+      transform: translateY(0px);
     }
+  }
+}
+
+.button__front {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  transition: transform 150ms linear, background-color 150ms linear;
+
+  color: var(--btn-text);
+  background-color: var(--btn-bg);
+  border-radius: 12px;
+  // border: 2px solid var(--btn-border);
+
+  &:hover {
+    background: var(--btn-hover-bg);
   }
 }
 
@@ -173,23 +154,88 @@ body {
     0px 4px 0px rgba(0, 0, 0, 0.5);
 }
 
-.start {
-  left: 10px;
-  position: absolute;
-  @include launch-site;
+.launch-site {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  box-sizing: border-box;
+
+  background-color: var(--site-side-bg);
+
+  transition: transform 150ms linear, background-color 150ms linear,
+    box-shadow 150ms linear;
+
+  border-radius: 12px;
+
+  box-shadow: 0 2px 0 0 var(--btn-shadow);
+
+  &__front {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    transform: translateY(-3px);
+    transition: transform 150ms linear, background-color 150ms linear;
+
+    color: var(--btn-text);
+    background-color: var(--site-bg);
+    border-radius: 12px;
+  }
+
+  &_start {
+    left: 10px;
+    position: absolute;
+  }
+
+  &_finish {
+    right: 10px;
+    position: absolute;
+  }
 }
 
-.finish {
-  right: 10px;
-  position: absolute;
-  @include launch-site;
+.launch-site__from {
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1;
+  content: "";
+  border: 4px solid white;
+  border-radius: 100%;
 }
 
+.launch-site__target {
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 4px;
+    background: white;
+    left: 50%;
+    top: 50%;
+  }
+
+  &:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}
+
+// rocket
 .plane {
   height: calc(var(--plane-height, 8) * var(--size-factor));
   width: calc(var(--plane-width, 8) * var(--size-factor));
   transform-style: preserve-3d;
-  transform: translate3d(var(--rocket-x), var(--rocket-y), 0px)
+  transform: translate3d(var(--rocket-x), var(--rocket-y), -1px)
     rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
 }
 
@@ -206,7 +252,7 @@ body {
   5% {
     transform: translate3d(
         calc(var(--rocket-x) + 25px),
-        calc(var(--rocket-y) - 125px),
+        calc(var(--rocket-y) - vh(19)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 50deg))
@@ -217,7 +263,7 @@ body {
   10% {
     transform: translate3d(
         calc(var(--rocket-x) + 50px),
-        calc(var(--rocket-y) - 250px),
+        calc(var(--rocket-y) - vh(38)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 100deg))
@@ -228,7 +274,7 @@ body {
   15% {
     transform: translate3d(
         calc(var(--rocket-x) + 75px),
-        calc(var(--rocket-y) - 300px),
+        calc(var(--rocket-y) - vh(46)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -239,7 +285,7 @@ body {
   20% {
     transform: translate3d(
         calc(var(--rocket-x) + 100px),
-        calc(var(--rocket-y) - 325px),
+        calc(var(--rocket-y) - vh(50)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -250,7 +296,7 @@ body {
   25% {
     transform: translate3d(
         calc(var(--rocket-x) + 125px),
-        calc(var(--rocket-y) - 350px),
+        calc(var(--rocket-y) - vh(54)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -261,7 +307,7 @@ body {
   30% {
     transform: translate3d(
         calc(var(--rocket-x) + 150px),
-        calc(var(--rocket-y) - 350px),
+        calc(var(--rocket-y) - vh(54)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -272,7 +318,7 @@ body {
   35% {
     transform: translate3d(
         calc(var(--rocket-x) + 150px),
-        calc(var(--rocket-y) - 325px),
+        calc(var(--rocket-y) - vh(50)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -283,7 +329,7 @@ body {
   40% {
     transform: translate3d(
         calc(var(--rocket-x) + 160px),
-        calc(var(--rocket-y) - 300px),
+        calc(var(--rocket-y) - vh(46)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -294,7 +340,7 @@ body {
   45% {
     transform: translate3d(
         calc(var(--rocket-x) + 160px),
-        calc(var(--rocket-y) - 275px),
+        calc(var(--rocket-y) - vh(42)),
         0px
       )
       rotateX(calc(var(--rotate-x) + 80deg))
@@ -344,7 +390,8 @@ body {
 
   100% {
     transform: translate3d(calc(var(--rocket-x)), calc(var(--rocket-y)), 0px)
-      rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+      rotateX(var(--rotate-x)) rotateY(var(--rotate-y))
+      rotateZ(calc(var(--rotate-z) + 14 * 180deg));
   }
 }
 
@@ -369,8 +416,7 @@ body {
     border: var(--size-factor) solid var(--window-frame);
     top: 16%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-90deg)
-      translate3d(0, -50%, calc(5.6 * var(--size-factor))) rotateX(5deg);
+    transform: translate(-50%, -57%) rotateX(90deg);
   }
 }
 .rocket__bottom {
@@ -401,18 +447,8 @@ body {
       var(--bottom);
     transform: translate3d(0, 0, -3px);
   }
-  &:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 72%;
-    width: 72%;
-    background: var(--body);
-    border-radius: 50%;
-    transform: translate3d(-50%, -50%, calc(4.25 * var(--size-factor)));
-  }
 }
+
 .rocket__body {
   width: 75%;
   height: 200%;
@@ -438,6 +474,7 @@ body {
     clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%);
   }
 }
+
 .rocket__wings {
   width: 150%;
   height: 50%;
@@ -445,10 +482,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotateX(-90deg) translate(0, 90%);
-  &:after {
-    transform: rotateY(90deg);
-  }
 }
+
 .rocket__wings:after,
 .rocket__wings:before {
   content: "";
